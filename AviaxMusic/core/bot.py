@@ -15,9 +15,9 @@ class Aviax(Client):
         LOGGER(__name__).info("Starting Bot...")
         super().__init__(
             name="AviaxMusic",
-            api_id=config.API_ID,
-            api_hash=config.API_HASH,
-            bot_token=config.BOT_TOKEN,
+            api_id=config.32426469,
+            api_hash=config.6cc009055eb3c64d5b50d6cea35ebee8,
+            bot_token=config.8442545854:AAEjnBJcQrE8qCqpH3hfm79fc7n3GmWyr6E,
             in_memory=True,
             parse_mode=ParseMode.HTML,
             max_concurrent_transmissions=7,
@@ -56,3 +56,4 @@ class Aviax(Client):
 
     async def stop(self):
         await super().stop()
+
