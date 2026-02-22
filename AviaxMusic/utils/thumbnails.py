@@ -17,7 +17,7 @@ def changeImageSize(maxWidth, maxHeight, image):
     newHeight = int(image.size[1] * min(widthRatio, heightRatio))
     return image.resize((newWidth, newHeight))
 
-async def get_thumb(videoid):
+async def gen_thumb(videoid):
     if os.path.isfile(f"cache/{videoid}.png"):
         return f"cache/{videoid}.png"
 
@@ -137,3 +137,4 @@ async def get_thumb(videoid):
 # 📢 Telegram channel : https://t.me/NOB1TA_SUPPORT
 # =======================================================
         
+
