@@ -395,3 +395,24 @@ async def markup_timer():
 
 
 asyncio.create_task(markup_timer())
+
+# ================== CLOSE SYSTEM START ==================
+
+from pyrogram import filters
+
+@app.on_callback_query(filters.regex("^close$"))
+async def close_button(client, CallbackQuery):
+    try:
+        await CallbackQuery.message.delete()
+    except:
+        pass
+
+
+@app.on_callback_query(filters.regex("^forceclose"))
+async def force_close_button(client, CallbackQuery):
+    try:
+        await CallbackQuery.message.delete()
+    except:
+        pass
+
+# ================== CLOSE SYSTEM END ==================
