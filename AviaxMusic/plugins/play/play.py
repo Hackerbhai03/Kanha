@@ -1,4 +1,3 @@
-import asyncio
 import random
 import string
 
@@ -7,19 +6,22 @@ from pyrogram.types import InlineKeyboardMarkup, InputMediaPhoto, Message
 from pytgcalls.exceptions import NoActiveGroupCall
 
 import config
-from AloneMusic import (Apple, Resso, SoundCloud, Spotify, Telegram, YouTube,
-                        app)
-from AloneMusic.core.call import Alone
-from AloneMusic.utils import seconds_to_min, time_to_seconds
-from AloneMusic.utils.channelplay import get_channeplayCB
-from AloneMusic.utils.decorators.language import languageCB
-from AloneMusic.utils.decorators.play import PlayWrapper
-from AloneMusic.utils.formatters import formats
-from AloneMusic.utils.inline import (botplaylist_markup, livestream_markup,
-                                     playlist_markup, slider_markup,
-                                     track_markup)
-from AloneMusic.utils.logger import play_logs
-from AloneMusic.utils.stream.stream import stream
+from AviaxMusic import Apple, Resso, SoundCloud, Spotify, Telegram, YouTube, app
+from AviaxMusic.core.call import Aviax
+from AviaxMusic.utils import seconds_to_min, time_to_seconds
+from AviaxMusic.utils.channelplay import get_channeplayCB
+from AviaxMusic.utils.decorators.language import languageCB
+from AviaxMusic.utils.decorators.play import PlayWrapper
+from AviaxMusic.utils.formatters import formats
+from AviaxMusic.utils.inline import (
+    botplaylist_markup,
+    livestream_markup,
+    playlist_markup,
+    slider_markup,
+    track_markup,
+)
+from AviaxMusic.utils.logger import play_logs
+from AviaxMusic.utils.stream.stream import stream
 from config import BANNED_USERS, lyrical
 
 @app.on_message(
@@ -654,3 +656,4 @@ async def slider_queries(client, CallbackQuery, _):
         return await CallbackQuery.edit_message_media(
             media=med, reply_markup=InlineKeyboardMarkup(buttons)
         )
+
