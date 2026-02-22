@@ -26,6 +26,15 @@ from config import BANNED_USERS
 from strings import get_string
 
 
+EFFECT_ID = [
+    5104841245755180586,
+    5104841245755180586,
+    5107584321108051014,
+    5107584321108051014,
+]
+
+
+
 @app.on_message(filters.command(["start"]) & filters.private & ~BANNED_USERS)
 @LanguageStart
 async def start_pm(client, message: Message, _):
@@ -156,4 +165,5 @@ async def welcome(client, message: Message):
                 await message.stop_propagation()
         except Exception as ex:
             print(ex)
+
 
