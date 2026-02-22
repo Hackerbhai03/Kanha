@@ -4,7 +4,7 @@ import aiohttp
 import aiofiles
 from config import YOUTUBE_IMG_URL
 from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageEnhance
-from youtubesearchpython.__future__ import VideosSearch
+from py_yt import VideosSearch
 
 
 def clear(text):
@@ -118,3 +118,4 @@ async def gen_thumb(videoid):
     except Exception as e:
         print("Thumbnail Error:", e)
         return YOUTUBE_IMG_URL
+
