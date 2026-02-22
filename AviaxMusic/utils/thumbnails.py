@@ -2,120 +2,111 @@ import os
 import re
 import aiohttp
 import aiofiles
-from AviaxMusic import app
 from config import YOUTUBE_IMG_URL
 from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageEnhance
 from youtubesearchpython.__future__ import VideosSearch
 
-def clear(text):
-    return re.sub("\s+", " ", text).strip()
 
-def changeImageSize(maxWidth, maxHeight, image):
-    widthRatio = maxWidth / image.size[0]
-    heightRatio = maxHeight / image.size[1]
-    newWidth = int(image.size[0] * min(widthRatio, heightRatio))
-    newHeight = int(image.size[1] * min(widthRatio, heightRatio))
-    return image.resize((newWidth, newHeight))
+def clear(text):
+    return re.sub(r"\s+", " ", text).strip()
+
 
 async def gen_thumb(videoid):
     if os.path.isfile(f"cache/{videoid}.png"):
         return f"cache/{videoid}.png"
 
-    url = f"https://www.youtube.com/watch?v={videoid}"
     try:
-        results = VideosSearch(url, limit=1)
-        for result in (await results.next())["result"]:
-            try:
-                title = result["title"]
-                title = re.sub("\W+", " ", title)
-                title = title.title()
-            except:
-                title = "Unsupported Title"
-            try:
-                duration = result["duration"]
-            except:
-                duration = "Unknown Mins"
-            thumbnail = result["thumbnails"][0]["url"].split("?")[0]
-            try:
-                views = result["viewCount"]["short"]
-            except:
-                views = "Unknown Views"
-            try:
-                channel = result["channel"]["name"]
-            except:
-                channel = "Unknown Channel"
+        # 🔍 Search using video ID
+        results = VideosSearch(videoid, limit=1)
+        data = await results.next()
 
-        
+        if not data["result"]:
+            return YOUTUBE_IMG_URL
+
+        result = data["result"][0]
+
+        title = result.get("title", "Unsupported Title")
+        title = clear(title)
+
+        duration = result.get("duration", "Unknown")
+        thumbnail = result["thumbnails"][0]["url"].split("?")[0]
+        views = result.get("viewCount", {}).get("short", "Unknown Views")
+        channel = result.get("channel", {}).get("name", "Unknown Channel")
+
+        # 📥 Download thumbnail
         async with aiohttp.ClientSession() as session:
             async with session.get(thumbnail) as resp:
-                if resp.status == 200:
-                    f = await aiofiles.open(f"cache/thumb{videoid}.png", mode="wb")
+                if resp.status != 200:
+                    return YOUTUBE_IMG_URL
+
+                async with aiofiles.open(f"cache/thumb{videoid}.png", "wb") as f:
                     await f.write(await resp.read())
-                    await f.close()
 
-        youtube = Image.open(f"cache/thumb{videoid}.png")
-        youtube = youtube.convert("RGBA")
+        youtube = Image.open(f"cache/thumb{videoid}.png").convert("RGBA")
 
-        
-        background = youtube.resize((1280, 720)).filter(ImageFilter.GaussianBlur(radius=10))
-        enhancer = ImageEnhance.Brightness(background)
-        background = enhancer.enhance(0.6)  
+        # 🎨 Background blur
+        background = youtube.resize((1280, 720)).filter(
+            ImageFilter.GaussianBlur(radius=15)
+        )
+        background = ImageEnhance.Brightness(background).enhance(0.5)
 
         draw = ImageDraw.Draw(background)
 
-    
-        center_thumb_size = (942, 422)
-        center_thumb = youtube.resize(center_thumb_size)
+        # 🎬 Center thumbnail
+        center_thumb = youtube.resize((942, 422))
 
-        border_size = 14
-        bordered_center_thumb = Image.new("RGBA", (center_thumb_size[0] + 2 * border_size, center_thumb_size[1] + 2 * border_size), (255, 255, 255))
-        bordered_center_thumb.paste(center_thumb, (border_size, border_size))
+        border_size = 10
+        bordered = Image.new(
+            "RGBA",
+            (center_thumb.width + border_size * 2,
+             center_thumb.height + border_size * 2),
+            (255, 255, 255)
+        )
+        bordered.paste(center_thumb, (border_size, border_size))
 
-        
-        pos_x = (1280 - bordered_center_thumb.size[0]) // 2
-        pos_y = ((720 - bordered_center_thumb.size[1]) // 2) - 30  
+        pos_x = (1280 - bordered.width) // 2
+        pos_y = (720 - bordered.height) // 2 - 40
 
-        background.paste(bordered_center_thumb, (pos_x, pos_y))
+        background.paste(bordered, (pos_x, pos_y))
 
-        
-        arial = ImageFont.truetype("AviaxMusic/assets/font2.ttf", 30)
-        font = ImageFont.truetype("AviaxMusic/assets/font.ttf", 30)
-        bold_font = ImageFont.truetype("AviaxMusic/assets/font.ttf", 33)
+        # 🔤 Load Fonts (Safe Mode)
+        try:
+            font = ImageFont.truetype("AviaxMusic/assets/font.ttf", 32)
+            small_font = ImageFont.truetype("AviaxMusic/assets/font2.ttf", 28)
+            bold_font = ImageFont.truetype("AviaxMusic/assets/font.ttf", 35)
+        except:
+            font = ImageFont.load_default()
+            small_font = ImageFont.load_default()
+            bold_font = ImageFont.load_default()
 
-    
-        text_size = draw.textsize("Kanha", font=font)
-        draw.text((1280 - text_size[0] - 10, 10), "Kanha", fill="yellow", font=font)
+        # 🏷 Watermark
+        draw.text((1100, 20), "Kanha", fill="yellow", font=font)
 
-    
+        # 📌 Channel & Views
         draw.text(
-            (55, 580),  
-            f"{channel} | {views[:23]}",
-            (255, 255, 255),
-            font=arial,
+            (60, 570),
+            f"{channel} | {views}",
+            fill="white",
+            font=small_font
         )
 
-        
+        # 🎵 Title (limit long titles)
+        if len(title) > 60:
+            title = title[:57] + "..."
+
         draw.text(
-            (57, 620), 
+            (60, 610),
             title,
-            (255, 255, 255),
-            font=font,
+            fill="white",
+            font=font
         )
 
-        
-        draw.text((55, 655), "00:00", fill="white", font=bold_font)
+        # ⏳ Duration Line
+        draw.text((60, 650), "00:00", fill="white", font=bold_font)
+        draw.line([(150, 665), (1130, 665)], fill="white", width=4)
+        draw.text((1145, 650), duration, fill="white", font=bold_font)
 
-        
-        start_x = 150
-        end_x = 1130
-        line_y = 670
-        draw.line([(start_x, line_y), (end_x, line_y)], fill="white", width=4)
-
-        
-        duration_text_size = draw.textsize(duration, font=bold_font)
-        draw.text((end_x + 10, 655), duration, fill="white", font=bold_font)
-
-        
+        # 🗑 Remove temp file
         try:
             os.remove(f"cache/thumb{videoid}.png")
         except:
@@ -125,16 +116,5 @@ async def gen_thumb(videoid):
         return f"cache/{videoid}.png"
 
     except Exception as e:
-        print(e)
+        print("Thumbnail Error:", e)
         return YOUTUBE_IMG_URL
-
-
-# ======================================================
-# ©️ 2025-26 All Rights Reserved by Nobita Bots 😎
-
-# 🧑‍💻 Developer : @ll_NOBITA_DEFAULTERS_ll
-# 🔗 Source link : https://github.com/iamnobita09/NOBITA_MUSIC.git
-# 📢 Telegram channel : https://t.me/NOB1TA_SUPPORT
-# =======================================================
-        
-
