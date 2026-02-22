@@ -8,7 +8,7 @@ from pyrogram.enums import (
     ChatMembersFilter,
 )
 from pyrogram.types import Message
-from AloneMusic import app
+from AviaxMusic import app
 
 logging.basicConfig(
     level=logging.INFO,
