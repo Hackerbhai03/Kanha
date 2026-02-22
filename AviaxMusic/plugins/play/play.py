@@ -1,34 +1,28 @@
 import random
 import string
+
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardMarkup, InputMediaPhoto, Message
 from pytgcalls.exceptions import NoActiveGroupCall
 
 import config
-from Spy import Apple, Resso, SoundCloud, Spotify, Telegram, YouTube, app
-from Spy.core.call import Sagar
-from Spy.utils import seconds_to_min, time_to_seconds
-from Spy.utils.channelplay import get_channeplayCB
-from Spy.utils.decorators.language import languageCB
-from Spy.utils.decorators.play import PlayWrapper
-from Spy.utils.formatters import formats
-from Spy.utils.inline import (
+from AviaxMusic import Apple, Resso, SoundCloud, Spotify, Telegram, YouTube, app
+from AviaxMusic.core.call import Aviax
+from AviaxMusic.utils import seconds_to_min, time_to_seconds
+from AviaxMusic.utils.channelplay import get_channeplayCB
+from AviaxMusic.utils.decorators.language import languageCB
+from AviaxMusic.utils.decorators.play import PlayWrapper
+from AviaxMusic.utils.formatters import formats
+from AviaxMusic.utils.inline import (
     botplaylist_markup,
     livestream_markup,
     playlist_markup,
     slider_markup,
     track_markup,
 )
-from Spy.utils.logger import play_logs
-from Spy.utils.stream.stream import stream
+from AviaxMusic.utils.logger import play_logs
+from AviaxMusic.utils.stream.stream import stream
 from config import BANNED_USERS, lyrical
-
-
-EMOJII = ["🔥", "💋", "🥺", "😒", "💖",
-          "💘", "💕", "✨", "🧪", "🥰",
-          "🚩", "🍌", "🫦", "💔", "🦠",
-          "😓", "🫧"]
-
 @app.on_message(
     filters.command(
         [
@@ -668,3 +662,4 @@ async def slider_queries(client, CallbackQuery, _):
         return await CallbackQuery.edit_message_media(
             media=med, reply_markup=InlineKeyboardMarkup(buttons)
         )
+
