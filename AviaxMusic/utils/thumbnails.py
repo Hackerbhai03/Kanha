@@ -219,7 +219,7 @@ async def gen_thumb(videoid):
 
         # > Powered By
         draw = ImageDraw.Draw(canvas)
-        powered_text = "Powered by Prince Patel"
+        powered_text = "Kanha"
         try:
             pow_w = draw.textlength(powered_text, font=powered_font)
         except:
@@ -245,3 +245,4 @@ async def gen_thumb(videoid):
         import traceback
         traceback.print_exc()
         return YOUTUBE_IMG_URL
+
