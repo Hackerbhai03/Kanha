@@ -80,7 +80,7 @@ async def gen_thumb(videoid):
             bold_font = ImageFont.load_default()
 
         # 🏷 Watermark
-        draw.text((1100, 20), "Kanha", fill="yellow", font=font)
+        draw.text((1100, 20), "", fill="yellow", font=font)
 
         # 📌 Channel & Views
         draw.text(
@@ -118,4 +118,5 @@ async def gen_thumb(videoid):
     except Exception as e:
         print("Thumbnail Error:", e)
         return YOUTUBE_IMG_URL
+
 
