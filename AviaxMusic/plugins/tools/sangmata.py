@@ -3,8 +3,8 @@ import random
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from pyrogram.raw.functions.messages import DeleteHistory
-from AloneMusic import userbot as us, app
-from AloneMusic.core.userbot import assistants
+from AviaxMusic import userbot as us, app
+from AviaxMusic.core.userbot import assistants
 
 @app.on_message(filters.command("sg"))
 async def sg(client: Client, message: Message):
