@@ -3,13 +3,11 @@ import random
 # 🔥 Tumhare diye hue images
 RANDOM_THUMBS = [
     "https://files.catbox.moe/ikxb96.jpg",
-    "https://files.catbox.moe/dqxsjh.jpg",
-    "https://files.catbox.moe/lnaqxk.jpg",
-    "https://files.catbox.moe/0qzssp.jpg",
-    "https://files.catbox.moe/lz57vi.jpg",
-    "https://files.catbox.moe/x1fcb6.jpg",
-    "https://files.catbox.moe/32ghsc.jpg",
-    "https://files.catbox.moe/tm8vmd.jpg",
+    "https://files.catbox.moe/a6hzmb.jpg",
+    "https://files.catbox.moe/ohezme.jpg",
+    "https://files.catbox.moe/spylio.jpg",
+    "https://files.catbox.moe/5go4t6.jpg",
+    
 ]
 
 _last_thumb = None
@@ -30,3 +28,4 @@ async def gen_thumb(videoid=None):  # videoid ignore
     except Exception as e:
         print(e)
         return RANDOM_THUMBS[0]
+
